@@ -1,6 +1,5 @@
 package br.com.zup.casadocodigo.controller;
 
-import java.net.URI;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -16,7 +15,6 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.util.UriComponentsBuilder;
 
 import br.com.zup.casadocodigo.dto.DetalheLivroDto;
 import br.com.zup.casadocodigo.dto.LivroDto;
@@ -41,14 +39,12 @@ public class LivroController {
 
 	@PostMapping
 	@Transactional
-	public ResponseEntity<Livro> cadastrar(@RequestBody @Valid LivroRequest request, UriComponentsBuilder uriBuilder) {
+	public ResponseEntity<Livro> cadastrar(@RequestBody @Valid LivroRequest request) {
 		Livro livro = request.toModel(this.autorRepository, this.categoriaRepository);
 		
 		this.livroRepository.save(livro);
 		
-		URI location = uriBuilder.path("/livros/{id}").buildAndExpand(livro.getId()).toUri();
-		
-		return ResponseEntity.created(location).body(livro);
+		return ResponseEntity.ok().body(livro);
 	}
 	
 	@GetMapping
@@ -68,7 +64,4 @@ public class LivroController {
 		
 		return ResponseEntity.notFound().build();
 	}
-	
-	
-	
 }
