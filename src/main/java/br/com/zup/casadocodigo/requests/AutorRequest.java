@@ -1,4 +1,4 @@
-package br.com.zup.casadocodigo.forms;
+package br.com.zup.casadocodigo.requests;
 
 import javax.persistence.Column;
 import javax.validation.constraints.Email;

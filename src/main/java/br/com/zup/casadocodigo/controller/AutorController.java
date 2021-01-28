@@ -11,9 +11,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import br.com.zup.casadocodigo.dto.AutorDto;
-import br.com.zup.casadocodigo.forms.AutorRequest;
 import br.com.zup.casadocodigo.model.Autor;
 import br.com.zup.casadocodigo.repository.AutorRepository;
+import br.com.zup.casadocodigo.requests.AutorRequest;
 
 @RestController
 @RequestMapping("/autores")
