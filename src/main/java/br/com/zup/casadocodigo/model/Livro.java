@@ -1,5 +1,6 @@
 package br.com.zup.casadocodigo.model;
 
+import java.math.BigDecimal;
 import java.time.LocalDate;
 
 import javax.persistence.Column;
@@ -14,7 +15,10 @@ import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
-import br.com.zup.casadocodigo.customvalidation.PrecoMinimo;
+import org.springframework.format.annotation.DateTimeFormat;
+
+import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonFormat.Shape;
 
 @Entity
 public class Livro {
@@ -35,8 +39,8 @@ public class Livro {
 	private String sumario;
 	
 	@NotNull
-	@PrecoMinimo(preco = 20.0)
-	private double preco;
+	@Min(value = 20)
+	private BigDecimal preco;
 	
 	@NotNull
 	@Min(value = 100)
@@ -47,6 +51,8 @@ public class Livro {
 	private String isbn;
 	
 	@NotNull
+	@JsonFormat(pattern = "dd/MM/yyyy", shape = Shape.STRING)
+	@DateTimeFormat(pattern = "dd/MM/yyyy")
 	private LocalDate dataPublicacao;
 	
 	@NotNull
@@ -62,7 +68,7 @@ public class Livro {
 	@Deprecated
 	public Livro() {}
 	
-	public Livro(String titulo, String resumo, String sumario, double preco,
+	public Livro(String titulo, String resumo, String sumario, BigDecimal preco,
 				int numeroPaginas, String isbn, LocalDate dataPublicacao, Autor autor, Categoria categoria) {
 		this.titulo = titulo;
 		this.resumo = resumo;
@@ -91,7 +97,7 @@ public class Livro {
 		return sumario;
 	}
 
-	public double getPreco() {
+	public BigDecimal getPreco() {
 		return preco;
 	}
 

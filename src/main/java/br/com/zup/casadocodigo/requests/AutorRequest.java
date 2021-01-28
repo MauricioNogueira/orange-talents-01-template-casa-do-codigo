@@ -5,7 +5,9 @@ import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Size;
 
+import br.com.zup.casadocodigo.customvalidation.UniqueValue;
 import br.com.zup.casadocodigo.model.Autor;
+import br.com.zup.casadocodigo.model.Categoria;
 
 public class AutorRequest {
 	
@@ -15,6 +17,7 @@ public class AutorRequest {
 	@Email
 	@NotBlank
 	@Column(unique = true)
+	@UniqueValue(domainClass = Autor.class, fieldName = "email")
 	private String email;
 	
 	@NotBlank

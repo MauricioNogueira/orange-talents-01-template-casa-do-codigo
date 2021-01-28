@@ -1,18 +1,24 @@
 package br.com.zup.casadocodigo.controller;
 
 import java.net.URI;
+import java.util.List;
+import java.util.Optional;
+import java.util.stream.Collectors;
 
 import javax.transaction.Transactional;
 import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.util.UriComponentsBuilder;
 
+import br.com.zup.casadocodigo.dto.DetalheLivroDto;
 import br.com.zup.casadocodigo.dto.LivroDto;
 import br.com.zup.casadocodigo.model.Livro;
 import br.com.zup.casadocodigo.repository.AutorRepository;
@@ -35,13 +41,34 @@ public class LivroController {
 
 	@PostMapping
 	@Transactional
-	public ResponseEntity<LivroDto> cadastrar(@RequestBody @Valid LivroRequest request, UriComponentsBuilder uriBuilder) {
+	public ResponseEntity<Livro> cadastrar(@RequestBody @Valid LivroRequest request, UriComponentsBuilder uriBuilder) {
 		Livro livro = request.toModel(this.autorRepository, this.categoriaRepository);
 		
 		this.livroRepository.save(livro);
 		
-		URI location = uriBuilder.path("/{id}").buildAndExpand(livro.getId()).toUri();
+		URI location = uriBuilder.path("/livros/{id}").buildAndExpand(livro.getId()).toUri();
 		
-		return ResponseEntity.created(location).body(new LivroDto(livro));
+		return ResponseEntity.created(location).body(livro);
 	}
+	
+	@GetMapping
+	public List<LivroDto> listar() {
+		List<LivroDto> livros = this.livroRepository.findAll().stream().map(LivroDto::new).collect(Collectors.toList());
+		
+		return livros;
+	}
+	
+	@GetMapping("/{id}")
+	public ResponseEntity<DetalheLivroDto> detalhe(@PathVariable Long id) {
+		Optional<Livro> optional = this.livroRepository.findById(id);
+		
+		if (optional.isPresent()) {
+			return ResponseEntity.ok().body(new DetalheLivroDto(optional.get()));
+		}
+		
+		return ResponseEntity.notFound().build();
+	}
+	
+	
+	
 }
